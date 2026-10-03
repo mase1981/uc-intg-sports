@@ -1,0 +1,48 @@
+{
+  "driver_id": "sports",
+  "version": "1.0.0",
+  "min_core_api": "0.22.0",
+  "name": {
+    "en": "Sports",
+    "de": "Sport",
+    "fr": "Sports"
+  },
+  "description": {
+    "en": "Live scores, fixtures and league tables for your teams - soccer, NFL, NBA, MLB, NHL, AFL and more",
+    "de": "Live-Ergebnisse, Spielpläne und Tabellen für Ihre Teams - Fußball, NFL, NBA, MLB, NHL, AFL und mehr",
+    "fr": "Scores en direct, calendriers et classements de vos équipes - football, NFL, NBA, MLB, NHL, AFL et plus"
+  },
+  "developer": {
+    "name": "Meir Miyara",
+    "email": "meir.miyara@gmail.com",
+    "url": "https://github.com/mase1981"
+  },
+  "home_page": "https://github.com/mase1981/uc-intg-sports",
+  "icon": "uc:trophy",
+  "setup_data_schema": {
+    "title": {
+      "en": "Sports",
+      "de": "Sport",
+      "fr": "Sports"
+    },
+    "settings": [
+      {
+        "id": "info",
+        "label": {
+          "en": "Setup information",
+          "de": "Einrichtungsinformationen",
+          "fr": "Informations de configuration"
+        },
+        "field": {
+          "label": {
+            "value": {
+              "en": "On the next screens, choose your display style, a league and then your team. Run setup again to follow more teams. Data is provided by ESPN's public feed; this integration is not affiliated with ESPN.",
+              "de": "Wählen Sie auf den nächsten Bildschirmen den Anzeigestil, eine Liga und dann Ihr Team. Führen Sie die Einrichtung erneut aus, um weiteren Teams zu folgen. Die Daten stammen aus dem öffentlichen ESPN-Feed; diese Integration ist nicht mit ESPN verbunden.",
+              "fr": "Sur les écrans suivants, choisissez le style d'affichage, une ligue puis votre équipe. Relancez la configuration pour suivre d'autres équipes. Les données proviennent du flux public d'ESPN ; cette intégration n'est pas affiliée à ESPN."
+            }
+          }
+        }
+      }
+    ]
+  }
+}
