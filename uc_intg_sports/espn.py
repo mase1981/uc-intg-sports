@@ -21,10 +21,12 @@ Soccer team and schedule calls use league "all" so cups and European games are i
 from __future__ import annotations
 
 import logging
+import ssl
 from datetime import datetime, timezone
 from typing import Any
 
 import aiohttp
+import certifi
 
 from uc_intg_sports.leagues import League
 from uc_intg_sports.model import LIVE, POST, PRE, Game, Play, Side, TableGroup, TableRow, Team, TeamInfo
@@ -35,6 +37,11 @@ SITE = "https://site.api.espn.com/apis/site/v2/sports"
 STANDINGS = "https://site.api.espn.com/apis/v2/sports"
 _TIMEOUT = aiohttp.ClientTimeout(total=20, connect=10)
 _HEADERS = {"User-Agent": "uc-intg-sports", "Accept": "application/json"}
+
+
+def _ssl_context() -> ssl.SSLContext:
+    """The Remote has no system CA certificates; use certifi's bundle."""
+    return ssl.create_default_context(cafile=certifi.where())
 
 
 class SportsDataError(Exception):
@@ -322,14 +329,19 @@ class EspnClient:
     def __init__(self) -> None:
         self._session: aiohttp.ClientSession | None = None
 
+    def _ensure_session(self) -> None:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                timeout=_TIMEOUT, headers=_HEADERS, connector=aiohttp.TCPConnector(ssl=_ssl_context())
+            )
+
     async def close(self) -> None:
         if self._session is not None and not self._session.closed:
             await self._session.close()
         self._session = None
 
     async def _json(self, url: str, params: dict[str, str] | None = None) -> Any:
-        if self._session is None or self._session.closed:
-            self._session = aiohttp.ClientSession(timeout=_TIMEOUT, headers=_HEADERS)
+        self._ensure_session()
         try:
             async with self._session.get(url, params=params) as response:
                 if response.status != 200:
@@ -342,8 +354,7 @@ class EspnClient:
 
     async def fetch_bytes(self, url: str) -> bytes:
         """Download a logo or other image."""
-        if self._session is None or self._session.closed:
-            self._session = aiohttp.ClientSession(timeout=_TIMEOUT, headers=_HEADERS)
+        self._ensure_session()
         try:
             async with self._session.get(url) as response:
                 if response.status != 200:
